@@ -25,6 +25,7 @@
 import axios from 'axios';
 import SearchBar from './SearchBar';
 import GamesContainer from './GamesContainer';
+import fallback from '../fallback.json';
 
 export default {
   name: 'LandingPage',
@@ -46,10 +47,14 @@ export default {
   methods: {
     fetchRemoteData() {
       this.loading = true;
-      return axios.get('http://starlord.hackerearth.com/gamesarena')
+      return axios.get('http://starlord.hackerearth.com/gamesaren')
         .then((result) => {
           this.loading = false;
           this.gamesData = result.data.filter(data => data.title);
+          this.makeArrayChunks(this.gamesData);
+        }).catch(() => {
+          this.loading = false;
+          this.gamesData = fallback.filter(data => data.title);
           this.makeArrayChunks(this.gamesData);
         });
     },
